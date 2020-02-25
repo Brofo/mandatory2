@@ -1,6 +1,9 @@
+import simulation.EventSim;
+
 public class Main {
 
     public static void main(String[] args) {
-	System.out.println("Hei");
+	    EventSim simulator = new EventSim();
+	    simulator.runSimulation();
     }
 }
