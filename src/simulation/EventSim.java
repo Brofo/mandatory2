@@ -4,18 +4,20 @@ import event.EnterCheckoutQueue;
 import event.EnterShop;
 import event.Event;
 import event.TimeComparator;
+import statistics.Statistics;
 
 import java.util.PriorityQueue;
 
 public class EventSim {
     private PriorityQueue<Event> simEventQueue;
-    private PriorityQueue<Event> checkoutQueue;
+    private Statistics stats;
 
-    private int AMOUNT_OF_CUSTOMERS = 5;
+    private final int AMOUNT_OF_CUSTOMERS = 10;
 
     public EventSim() {
         simEventQueue = new PriorityQueue<>(new TimeComparator());
         addCustomersToSim(AMOUNT_OF_CUSTOMERS - 1);
+        stats = new Statistics(AMOUNT_OF_CUSTOMERS);
     }
 
 
@@ -23,18 +25,32 @@ public class EventSim {
         while (!simEventQueue.isEmpty()) {
             Event e = simEventQueue.poll();
             if (e instanceof EnterCheckoutQueue) {
-                runCheckoutSimulation(e);
-            } else {
-                System.out.println(e.getEventInfo());
-                addEvent(e.nextEvent(), simEventQueue);
+                calculateCheckoutQueueTime(e);
             }
+
+            System.out.println(e.getEventInfo());
+            addEvent(e.nextEvent());
         }
     }
 
-    private void runCheckoutSimulation(Event e) {
-        if (checkoutQueue.isEmpty()) {
-            addEvent(e.nextEvent(), checkoutQueue);
+    public Statistics getSimStats() {
+        return this.stats;
+    }
+
+    /**
+     * Method will calculate the queue time for each customer based on how many customers
+     * are checking out.
+     */
+    private void calculateCheckoutQueueTime(Event e) {
+        int totalQueueTime = 0;
+
+        for (Event qe : simEventQueue) {
+            int extraTime = qe.getTimeToCheckout(); //Will only return more than 0 if the element is a StartCheckout Event.
+                                                    //Or a LeaveStore event.
+            totalQueueTime = totalQueueTime + extraTime;
         }
+        e.setCheckoutQueueTime(totalQueueTime);
+        stats.addCustomerQueueTime(totalQueueTime);
     }
 
 
@@ -50,9 +66,9 @@ public class EventSim {
         }
     }
 
-    private void addEvent(Event e, PriorityQueue q) {
+    private void addEvent(Event e) {
         if (null == e)
             return;
-        q.add(e);
+        simEventQueue.add(e);
     }
 }

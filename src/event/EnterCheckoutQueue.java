@@ -21,7 +21,8 @@ public class EnterCheckoutQueue extends Event{
         return new StartCheckout(cus);
     }
 
-    public Customer returnCustomer() {
-        return this.cus;
+    @Override
+    public void setCheckoutQueueTime(int queueTime) {
+        cus.setCheckoutQueueTime(queueTime);
     }
 }

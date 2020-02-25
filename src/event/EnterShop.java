@@ -22,4 +22,8 @@ public class EnterShop extends Event {
         return new FinishShopping(cus);
     }
 
+    @Override
+    public void setCheckoutQueueTime(int queueTime) {
+        cus.setCheckoutQueueTime(queueTime);
+    }
 }
