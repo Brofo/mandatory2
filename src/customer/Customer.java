@@ -1,4 +1,5 @@
 package customer;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
@@ -25,6 +26,7 @@ public class Customer {
     private int walkToCheckoutQueueTime;
     private static final int SCAN_TIME = 2;
     private static final int PAY_TIME = 10;
+    private String chosenPriorityQueue;
 
     //Timestamp variables
     private static final int START_TIME = 0; //The timer starts after a customer enters the shop.
